@@ -12,3 +12,11 @@ SQL-Database/.breakpoints
 *.json
 
 Database/backup
+
+Pygame-Dependent/.DS_Store
+
+.DS_Store
+
+Pygame-Dependent/Snake/.breakpoints
+
+Pygame-Dependent/A-Case-of-CCCs/.breakpoints
