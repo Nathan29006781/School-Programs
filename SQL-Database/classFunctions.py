@@ -23,7 +23,7 @@ def getClassInfo(): #Function to add a new class
   classs = ['','','','','',''] #Gets a blank array for a new class
   for i in range (len(g.classTemplate)):
     print(classs)
-    if f.containsOnlyText(g.classTemplate[i]): #Chekcs if the classTemplate is one that contains only text
+    if f.containsOnlyText(g.classTemplate[i]): #Checks if the classTemplate is one that contains only text
       classs[i] = f.acquirePureText(g.classPrompts[i]) #Uses the acquire text function that accepts only text
     elif type(g.classTemplate[i]) == type(""):
       classs[i] = f.acquireAlphaText(g.classPrompts[i], g.classTemplate[i]) #Uses the acquire text function that accepts alphanumeric text

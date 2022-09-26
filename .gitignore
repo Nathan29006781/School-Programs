@@ -1,0 +1,14 @@
+
+*.pyc
+
+Database/.breakpoints
+
+SQL-Database/.breakpoints
+
+*.toml
+
+*.lock
+
+*.json
+
+Database/backup
