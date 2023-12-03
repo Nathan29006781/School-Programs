@@ -1,13 +1,10 @@
 /*
-Carina Gandhi, Aya Ahmed, Nathan Menezes, Emily DiLauro
+Carina Gandhi
+Aya Ahmed
+Nathan Menezes
+Emily DiLauro
 CANE - A Loneliness Aid
 Version 15.0
-*/
-
-/*
-Display time left
-Beep while waiting for user
-Use getTimer and getUSDistance
 */
 
 const int X_LENGTH = 7;
@@ -174,6 +171,7 @@ task main()
 	shutDown();
 }
 
+//resets the gate at the bottom to allow pieces to fall out
 void resetGate(bool closed)
 {
 	writeDebugStreamLine("Resetting Gate");
@@ -196,6 +194,7 @@ void resetGate(bool closed)
 	writeDebugStreamLine("Gate Reset");
 }
 
+//resets motors to bottom right corner
 void resetMotors()
 {
 	const int NORMAL_START_SPEED = 40;
@@ -235,6 +234,7 @@ void resetMotors()
 	writeDebugStreamLine("Motors Reset");
 }
 
+//resets all systems and arrays
 void resetBoard(bool gateClosed)
 {
 	display("Resetting Board...");
@@ -277,6 +277,7 @@ void go(tMotor motor_index, int position = 0, int speed = 30)
 	}
 }
 
+//opens or closes gate
 void gateSet(bool closed, int speed)
 {
 	const int GATE_CLOSED = 175;
@@ -284,6 +285,7 @@ void gateSet(bool closed, int speed)
 	motor[GATE_PORT] = 0;
 }
 
+//locks motor into magazine
 void engageMag()
 {
 	writeDebugStreamLine("Engaging Magazine");
@@ -312,7 +314,7 @@ void moveY(float position, int speed)
 	writeDebugStreamLine("Y movement complete");
 }
 
-
+//simultaneous movement of x and y motors
 void moveXY(float x_position, float y_position, int speed)
 {
 	writeDebugStreamLine("Moving X to %d and Y to %d", x_position, y_position);
@@ -339,6 +341,7 @@ void moveXY(float x_position, float y_position, int speed)
 	writeDebugStreamLine("XY movement complete");
 }
 
+//moves to desired playing position and plays the piece
 void dropPiece(int x_coord)
 {
 	writeDebugStreamLine("Dropping Piece");
@@ -367,6 +370,7 @@ void dropPiece(int x_coord)
 	motor[SLIDE_PORT] = 0;
 }
 
+//beeps while waiting for the user
 TEV3Buttons waitForPress(TEV3Buttons button1, TEV3Buttons button2)
 {
 	waitUntil(!getButtonPress(buttonAny));
@@ -421,6 +425,7 @@ TEV3Buttons waitForPress(TEV3Buttons button1, TEV3Buttons button2)
 	return SHUTDOWN_BUTTON;
 }
 
+//scans colour and reads it out
 TLegoColors getColour()
 {
 	TLegoColors colour = getColorName(COL_PORT);
@@ -433,6 +438,7 @@ TLegoColors getColour()
 	return colour;
 }
 
+//converts colour to text
 char getColourChar(TLegoColors colour)
 {
 	switch(colour)
@@ -473,6 +479,7 @@ void display(const string & text, bool big_text)
 	writeDebugStreamLine(text);
 }
 
+//outputs the current board state
 void displayBoard()
 {
 	eraseDisplay();
@@ -487,6 +494,8 @@ void displayBoard()
 	}
 	writeDebugStream("\n\n");
 }
+
+//outputs old board state
 void displayOldBoard()
 {
 	eraseDisplay();
@@ -504,10 +513,10 @@ void displayOldBoard()
 
 bool personThere()
 {
-	//Why does getUSDistance not work
 	return SensorValue[US_PORT] < 75;
 }
 
+//checks if there is a location in which the robot can go to win or block the player from winning
 int potentialWin(TLegoColors colour)
 {
 	int num_in_row = 0;
@@ -624,10 +633,10 @@ int potentialWin(TLegoColors colour)
 		}
 	}
 
-
 	return -1;
 }
 
+//checks if there is 4 in a row of a given colour
 bool winner(TLegoColors colour)
 {
 	//Checks for horizontal 4 in a row win
@@ -717,12 +726,14 @@ bool winner(TLegoColors colour)
 	return false;
 }
 
+//runs while waiting for the player to go
 void playerMove(){
 	display("Play, then press ENTER", false);
 	waitForPress();
 	playSound(soundBeepBeep);
 }
 
+//determines the ideal location for the robot to play
 int robotStrategy()
 {
 	//Check where the player played piece (save column and row)
@@ -768,12 +779,13 @@ int robotStrategy()
 	do
 	{
 		x_coord=random(X_LENGTH-1);
-	} while (board[Y_LENGTH-1][x_coord]!=colorNone)
+	} while (board[Y_LENGTH-1][x_coord]!=colorNone);
 	return x_coord;
 
 	return -1; //Should never happen
 }
 
+//finds the row to play in , updates array, and plays piece
 void robotMove()
 {
 	display("Robot Moving...");
@@ -781,7 +793,8 @@ void robotMove()
 	int y_coord = 0;
 	if (x_coord < 0 || x_coord >= X_LENGTH) y_coord = -1;
 	else
-	{ //Finds row from the column
+	{
+		//Finds row from the column
 		while(y_coord < Y_LENGTH && board[y_coord][x_coord] != 0) y_coord++;
 	}
 
@@ -796,6 +809,7 @@ void robotMove()
 	display("Robot Moved");
 }
 
+//checks if the user cheated and outputs information
 bool cheated(int changed, int row, int col)
 {
 	bool cheat = false;
@@ -830,6 +844,7 @@ bool cheated(int changed, int row, int col)
 	return cheat;
 }
 
+//scans through entire board
 bool updateBoard()
 {
 	display("Scanning Board...");
@@ -912,6 +927,7 @@ bool updateBoard()
 	return false;
 }
 
+//waits for the user to decide if they want to play again
 bool playAgain()
 {
 	display("Play again?");
@@ -928,6 +944,7 @@ bool playAgain()
 	return waitForPress(buttonLeft, buttonRight) == buttonRight;
 }
 
+//shuts down by resetting board and saving score
 void shutDown()
 {
 	stopAllMotors();
@@ -943,6 +960,7 @@ void shutDown()
 	stopAllTasks();
 }
 
+//reads and returns high score from file
 short getScore()
 {
 	short high_score = 0;
@@ -967,6 +985,7 @@ short getScore()
 	return high_score;
 }
 
+//saves score to file if higher than current high score
 void saveScore(short high_score)
 {
 	if (score > high_score)
