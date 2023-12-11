@@ -4,7 +4,7 @@ Aya Ahmed
 Nathan Menezes
 Emily DiLauro
 CANE - A Loneliness Aid
-Version 15.0
+Version: Final (16.0)
 */
 
 const int X_LENGTH = 7;
